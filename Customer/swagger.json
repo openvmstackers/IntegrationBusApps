@@ -1,0 +1,208 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "title" : "Customer",
+    "version" : "1.0.0",
+    "description" : "Customer"
+  },
+  "paths" : {
+    "/{customer_id}" : {
+      "get" : {
+        "operationId" : "getCustomer_id",
+        "responses" : {
+          "200" : {
+            "description" : "The operation was successful.",
+            "schema" : {
+              "$ref" : "#/definitions/customerProfile"
+            }
+          },
+          "404" : {
+            "description" : "The requested customer was not found",
+            "schema" : {
+              "$ref" : "#/definitions/errorResponse"
+            }
+          }
+        },
+        "produces" : [ "application/json" ],
+        "description" : "Retrieve customer_id",
+        "parameters" : [ {
+          "required" : true,
+          "name" : "customer_id",
+          "in" : "path",
+          "type" : "string",
+          "description" : "The Customer Identification Number"
+        } ]
+      }
+    }
+  },
+  "basePath" : "/customer/v1",
+  "definitions" : {
+    "customerProfile" : {
+      "type" : "object",
+      "properties" : {
+        "customerName" : {
+          "type" : "object",
+          "properties" : {
+            "firstName" : {
+              "type" : "string"
+            },
+            "middleName" : {
+              "type" : [ "string", "null" ]
+            },
+            "lastName" : {
+              "type" : "string"
+            }
+          }
+        },
+        "gender" : {
+          "type" : "string"
+        },
+        "dateOfBirth" : {
+          "type" : "string"
+        },
+        "postalAddresses" : {
+          "type" : "array",
+          "items" : {
+            "type" : "object",
+            "properties" : {
+              "postalAddress" : {
+                "type" : "object",
+                "properties" : {
+                  "addressType" : {
+                    "type" : "string"
+                  },
+                  "addressLine1" : {
+                    "type" : "string"
+                  },
+                  "addressLine2" : {
+                    "type" : "string"
+                  },
+                  "addressLine3" : {
+                    "type" : [ "string", "null" ]
+                  },
+                  "city" : {
+                    "type" : "string"
+                  },
+                  "state" : {
+                    "type" : [ "string", "null" ]
+                  },
+                  "country" : {
+                    "type" : "string"
+                  },
+                  "zipcode" : {
+                    "type" : "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "electronicAddresses" : {
+          "type" : "array",
+          "items" : {
+            "type" : "object",
+            "properties" : {
+              "electronicAddress" : {
+                "type" : "object",
+                "properties" : {
+                  "addressType" : {
+                    "type" : "string"
+                  },
+                  "email" : {
+                    "type" : "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "telephoneNumbers" : {
+          "type" : "array",
+          "items" : {
+            "type" : "object",
+            "properties" : {
+              "telephoneNumber" : {
+                "type" : "object",
+                "properties" : {
+                  "numberType" : {
+                    "type" : "string"
+                  },
+                  "countryDialCode" : {
+                    "type" : "string"
+                  },
+                  "number" : {
+                    "type" : "string"
+                  },
+                  "extension" : {
+                    "type" : [ "string", "null" ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "identificationDocuments" : {
+          "type" : "array",
+          "items" : {
+            "type" : "object",
+            "properties" : {
+              "identificationDocument" : {
+                "type" : "object",
+                "properties" : {
+                  "documentType" : {
+                    "type" : "string"
+                  },
+                  "issuingAuthorityName" : {
+                    "type" : "string"
+                  },
+                  "uniqueIdentificationNumber" : {
+                    "type" : "string"
+                  },
+                  "issueDate" : {
+                    "type" : "string"
+                  },
+                  "expiryDate" : {
+                    "type" : "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "startDate" : {
+          "type" : "string"
+        },
+        "endDate" : {
+          "type" : "string"
+        }
+      }
+    },
+    "errorResponse" : {
+      "type" : "object",
+      "properties" : {
+        "errors" : {
+          "type" : "array",
+          "items" : {
+            "type" : "object",
+            "properties" : {
+              "error" : {
+                "type" : "object",
+                "properties" : {
+                  "errorCode" : {
+                    "type" : "string"
+                  },
+                  "description" : {
+                    "type" : "string"
+                  },
+                  "errorLogUUID" : {
+                    "type" : "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
