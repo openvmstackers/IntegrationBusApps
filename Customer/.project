@@ -3,6 +3,7 @@
 	<name>Customer</name>
 	<comment></comment>
 	<projects>
+		<project>Log4JLogging2ESQLLibrary</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
