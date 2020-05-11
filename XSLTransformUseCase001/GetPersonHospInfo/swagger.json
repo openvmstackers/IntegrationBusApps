@@ -1,0 +1,161 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "title" : "GetPersonHospInfo",
+    "version" : "1.0.0",
+    "description" : "GetPersonHospInfo"
+  },
+  "paths" : {
+    "/person-hosp-info" : {
+      "get" : {
+        "operationId" : "getPerson-hosp-info",
+        "responses" : {
+          "200" : {
+            "description" : "The operation was successful.",
+            "schema" : {
+              "$ref" : "#/definitions/GetPersonHospInfoResponse"
+            }
+          }
+        },
+        "produces" : [ "application/json" ],
+        "description" : "Retrieve person-hosp-info",
+        "parameters" : [ {
+          "name" : "perNumber",
+          "in" : "query",
+          "type" : "string",
+          "required" : true
+        } ]
+      }
+    }
+  },
+  "basePath" : "/getpersonhospinfo/v1",
+  "definitions" : {
+    "GetPersonHospInfoResponse" : {
+      "type" : "object",
+      "properties" : {
+        "person" : {
+          "type" : "object",
+          "properties" : {
+            "personNumber" : {
+              "type" : "string"
+            },
+            "name" : {
+              "type" : "object",
+              "properties" : {
+                "first" : {
+                  "type" : "string"
+                },
+                "middle" : {
+                  "type" : "string"
+                },
+                "last" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "age" : {
+              "type" : "string"
+            },
+            "gender" : {
+              "type" : "string"
+            },
+            "postalAddress" : {
+              "type" : "object",
+              "properties" : {
+                "addressLine1" : {
+                  "type" : "string"
+                },
+                "addressLine2" : {
+                  "type" : "string"
+                },
+                "addressLine3" : {
+                  "type" : "string"
+                },
+                "addressLine4" : {
+                  "type" : "string"
+                },
+                "code" : {
+                  "type" : "string"
+                },
+                "city" : {
+                  "type" : "string"
+                },
+                "countryCode" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "email" : {
+              "type" : "string"
+            },
+            "mobile" : {
+              "type" : "string"
+            },
+            "workPhone" : {
+              "type" : "string"
+            },
+            "homePhone" : {
+              "type" : "string"
+            }
+          }
+        },
+        "hospitalisationRecords" : {
+          "type" : "object",
+          "properties" : {
+            "hospitalisation" : {
+              "type" : "array",
+              "items" : {
+                "type" : "object",
+                "properties" : {
+                  "hmrn" : {
+                    "type" : "string"
+                  },
+                  "hospitalName" : {
+                    "type" : "string"
+                  },
+                  "postalAddress" : {
+                    "type" : "object",
+                    "properties" : {
+                      "addressLine1" : {
+                        "type" : "string"
+                      },
+                      "addressLine2" : {
+                        "type" : "string"
+                      },
+                      "addressLine3" : {
+                        "type" : "string"
+                      },
+                      "addressLine4" : {
+                        "type" : "string"
+                      },
+                      "code" : {
+                        "type" : "string"
+                      },
+                      "city" : {
+                        "type" : "string"
+                      },
+                      "countryCode" : {
+                        "type" : "string"
+                      }
+                    }
+                  },
+                  "email" : {
+                    "type" : "string"
+                  },
+                  "capturedDate" : {
+                    "type" : "string",
+                    "format" : "date"
+                  },
+                  "hospitalisationDate" : {
+                    "type" : "string",
+                    "format" : "date"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

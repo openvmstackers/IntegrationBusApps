@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?><xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://genericaccessormodule.example.org/GenericInterface/" xmlns:Q1="http://genericaccessormodule.example.com/Common" xmlns:gif="http://genericaccessormodule.example.org/GenericInterface/" xmlns:ibmSchExtn="http://www.ibm.com/schema/extensions" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+            <xsd:import namespace="http://genericaccessormodule.example.com/Common" schemaLocation="CommonDefinitions.xsd"/>
+            <xsd:element ibmSchExtn:docRoot="true" name="RetrieveInformation" type="Q1:GenericAccessorModuleRequestType">
+            </xsd:element>
+            <xsd:element ibmSchExtn:docRoot="true" name="RetrieveInformationResponse" type="Q1:GenericAccessorModuleResponseType">
+            </xsd:element>
+    </xsd:schema>

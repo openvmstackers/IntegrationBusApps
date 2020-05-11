@@ -1,0 +1,115 @@
+DECLARE ns1 NAMESPACE 'http://genericaccessormodule.example.com/Common';
+DECLARE ns NAMESPACE 'http://genericaccessormodule.example.org/GenericInterface/';
+
+
+CREATE COMPUTE MODULE CallableGetAccessorModuleCaller_Compute
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		
+		--SET Environment.userdata.message = InputRoot.JSON.Data;
+		
+		--CALL CopyMessageHeaders();
+		-- CALL CopyEntireMessage();
+		
+		DECLARE hasMorePages, isFirstRun  BOOLEAN true;
+		DECLARE childRecordCardinality, parentRecordCardinality, J INTEGER 0;
+		DECLARE childRecordIndex, parentRecordIndex, I INTEGER 1;
+		DECLARE refToBackendReqMsg, refToResponseMsg, refToResponseMsgRecord REFERENCE TO OutputRoot;
+		DECLARE ns_comm NAMESPACE 'http://genericaccessormodule.example.com/Common';
+		
+		WHILE(hasMorePages) DO
+		
+			SET hasMorePages = false;
+			-- SET Environment.userdata.HTTPHeader = InputRoot.HTTPInputHeader;
+			-- SET Environment.userdata.LOCALENVIRONMENT = InputLocalEnvironment;
+			
+			-- CREATE LASTCHILD OF Environment.userdata DOMAIN 'JSON' NAME 'PAYLOAD';
+			-- SET Environment.userdata.PAYLOAD = InputRoot.JSON;
+			
+			SET OutputRoot.HTTPInputHeader = InputRoot.HTTPInputHeader;
+			
+			CREATE LASTCHILD OF OutputRoot.SOAP.Body.ns:RetrieveInformation.ns_comm:record AS refToBackendReqMsg NAMESPACE ns_comm NAME 'column';
+			CREATE LASTCHILD OF refToBackendReqMsg NAMESPACE ns_comm NAME 'name'
+					VALUE 'PNUMBER';
+			CREATE LASTCHILD OF refToBackendReqMsg NAMESPACE ns_comm NAME 'value'
+					VALUE InputLocalEnvironment.HTTP.Input.QueryString.perNumber;
+			
+			IF isFirstRun THEN
+				SET isFirstRun = false;
+				IF EXISTS(InputLocalEnvironment.HTTP.Input.QueryString.pageOffset[]) THEN
+					CREATE LASTCHILD OF OutputRoot.SOAP.Body.ns:RetrieveInformation.ns_comm:record AS refToBackendReqMsg NAMESPACE ns_comm NAME 'column';
+					CREATE LASTCHILD OF refToBackendReqMsg NAMESPACE ns_comm NAME 'name'
+							VALUE 'PAGEOFFSET';
+					CREATE LASTCHILD OF refToBackendReqMsg NAMESPACE ns_comm NAME 'value'
+							VALUE InputLocalEnvironment.HTTP.Input.QueryString.pageOffset;
+				END IF;
+			ELSEIF EXISTS(Environment.userdata.pageOffset[]) AND Environment.userdata.pageOffset > 0 THEN
+					CREATE LASTCHILD OF OutputRoot.SOAP.Body.ns:RetrieveInformation.ns_comm:record AS refToBackendReqMsg NAMESPACE ns_comm NAME 'column';
+					CREATE LASTCHILD OF refToBackendReqMsg NAMESPACE ns_comm NAME 'name'
+							VALUE 'PAGEOFFSET';
+					CREATE LASTCHILD OF refToBackendReqMsg NAMESPACE ns_comm NAME 'value'
+							VALUE Environment.userdata.pageOffset;
+			END IF;
+			
+			PROPAGATE TO TERMINAL 'out';
+			
+			IF EXISTS(Environment.userdata.pageOffset[]) AND Environment.userdata.pageOffset > 0 THEN
+					SET hasMorePages = true;
+			END IF;
+			
+		END WHILE;
+
+/*******************************************************************************************************************************		
+		CREATE LASTCHILD OF OutputRoot.XMLNSC AS refToResponseMsg DOMAIN 'XMLNSC' NAME 'records';
+		
+		SET childRecordCardinality = CARDINALITY(Environment.userdata.PAYLOAD.record[]);
+		SET childRecordIndex = 1;
+		WHILE childRecordIndex <= childRecordCardinality DO
+			CREATE LASTCHILD OF refToResponseMsg AS refToResponseMsgRecord DOMAIN 'XMLNSC' NAME 'record';
+			SET J = CARDINALITY(Environment.userdata.PAYLOAD.record[childRecordIndex].*[]);
+			SET I = 1;
+			WHILE I <= J DO
+				SET refToResponseMsgRecord.*[I] = Environment.userdata.PAYLOAD.record[childRecordIndex].*[I];
+				SET I = I + 1;
+			END WHILE;
+			SET childRecordIndex = childRecordIndex + 1;
+		END WHILE;
+*********************************************************************************************************************************/
+		
+		CALL CopyMessageHeaders();
+		
+		SET childRecordCardinality = 0;
+		SET childRecordIndex = 1;
+		SET childRecordCardinality = CARDINALITY(Environment.userdata.PAYLOAD.child.record[]);
+		CREATE LASTCHILD OF OutputRoot.XMLNSC AS refToResponseMsg DOMAIN 'XMLNSC' NAME 'records';
+		WHILE childRecordIndex <= childRecordCardinality DO
+			CREATE LASTCHILD OF refToResponseMsg AS refToResponseMsgRecord DOMAIN 'XMLNSC' NAME 'record';
+			SET J = 0;
+			SET I = 1;
+			SET J = CARDINALITY(Environment.userdata.PAYLOAD.child.record[childRecordIndex].*[]);
+			WHILE I <= J DO
+				SET refToResponseMsgRecord.*[I] = Environment.userdata.PAYLOAD.child.record[childRecordIndex].*[I];
+				SET I = I + 1;
+			END WHILE;
+			SET childRecordIndex = childRecordIndex + 1;		
+		END WHILE;
+
+		PROPAGATE TO TERMINAL 'out1';
+		
+		RETURN FALSE;
+	END;
+
+	CREATE PROCEDURE CopyMessageHeaders() BEGIN
+		DECLARE I INTEGER 1;
+		DECLARE J INTEGER;
+		SET J = CARDINALITY(InputRoot.*[]);
+		WHILE I < J DO
+			SET OutputRoot.*[I] = InputRoot.*[I];
+			SET I = I + 1;
+		END WHILE;
+	END;
+
+	CREATE PROCEDURE CopyEntireMessage() BEGIN
+		SET OutputRoot = InputRoot;
+	END;
+END MODULE;

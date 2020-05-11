@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ComIbmCallableFlowAsyncInvoke.msgnode="ComIbmCallableFlowAsyncInvoke.msgnode" xmlns:ComIbmCallableFlowAsyncResponse.msgnode="ComIbmCallableFlowAsyncResponse.msgnode" xmlns:ComIbmTrace.msgnode="ComIbmTrace.msgnode" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:eflow="http://www.ibm.com/wbi/2005/eflow" xmlns:utility="http://www.ibm.com/wbi/2005/eflow_utility" nsURI="getPerson_hosp_info.subflow" nsPrefix="getPerson_hosp_info.subflow">
+  <eClassifiers xmi:type="eflow:FCMComposite" name="FCMComposite_1">
+    <eSuperTypes href="http://www.ibm.com/wbi/2005/eflow#//FCMBlock"/>
+    <translation xmi:type="utility:TranslatableString" key="getPerson_hosp_info" bundleName="getPerson_hosp_info" pluginId="GetPersonHospInfo"/>
+    <colorGraphic16 xmi:type="utility:GIFFileGraphic" resourceName="platform:/plugin/GetPersonHospInfo/icons/full/obj16/getPerson_hosp_info.gif"/>
+    <colorGraphic32 xmi:type="utility:GIFFileGraphic" resourceName="platform:/plugin/GetPersonHospInfo/icons/full/obj30/getPerson_hosp_info.gif"/>
+    <composition>
+      <nodes xmi:type="eflow:FCMSource" xmi:id="InTerminal.Input_1" location="25,25">
+        <translation xmi:type="utility:TranslatableString" key="Input" bundleName="getPerson_hosp_info" pluginId="GetPersonHospInfo"/>
+      </nodes>
+      <nodes xmi:type="eflow:FCMSink" xmi:id="OutTerminal.Output_1" location="458,183">
+        <translation xmi:type="utility:TranslatableString" key="Output" bundleName="getPerson_hosp_info" pluginId="GetPersonHospInfo"/>
+      </nodes>
+      <nodes xmi:type="ComIbmCallableFlowAsyncInvoke.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_1" location="236,25" asyncResponseCorrelator="CallableFlowAsyncInvoke-a36c9c33-8c93-473d-900d-35a2db2a4be9" targetApplication="GetPersonHospInfo" targetEndpointName="CALLABLEGETACCMOD99876234" requestTimeout="900">
+        <translation xmi:type="utility:ConstantString" string="CallableFlowAsyncInvoke"/>
+      </nodes>
+      <nodes xmi:type="ComIbmCallableFlowAsyncResponse.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_2" location="77,176" asyncResponseCorrelator="CallableFlowAsyncInvoke-a36c9c33-8c93-473d-900d-35a2db2a4be9">
+        <translation xmi:type="utility:ConstantString" string="CallableFlowAsyncResponse"/>
+      </nodes>
+      <nodes xmi:type="ComIbmTrace.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_3" location="127,25" destination="file" filePath="/home/chasoman/IBM/ACET11/workspace/XSLTransformUseCase001/log/applicationlogs.log" pattern="P1 Trace|${CURRENT_DATE}|${CURRENT_TIMESTAMP}|${Root} ">
+        <translation xmi:type="utility:ConstantString" string="Trace_P1"/>
+      </nodes>
+      <nodes xmi:type="ComIbmTrace.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_4" location="329,182" destination="file" filePath="/home/chasoman/IBM/ACET11/workspace/XSLTransformUseCase001/log/applicationlogs.log" pattern="P4 Trace|${CURRENT_DATE}|${CURRENT_TIMESTAMP}|${Root}|${ExceptionList}">
+        <translation xmi:type="utility:ConstantString" string="Trace_P4"/>
+      </nodes>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_5" targetNode="FCMComposite_1_3" sourceNode="InTerminal.Input_1" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_6" targetNode="FCMComposite_1_1" sourceNode="FCMComposite_1_3" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_7" targetNode="FCMComposite_1_4" sourceNode="FCMComposite_1_2" sourceTerminalName="OutTerminal.failure" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_8" targetNode="FCMComposite_1_4" sourceNode="FCMComposite_1_2" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_9" targetNode="FCMComposite_1_4" sourceNode="FCMComposite_1_2" sourceTerminalName="OutTerminal.catch" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_10" targetNode="OutTerminal.Output_1" sourceNode="FCMComposite_1_4" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in"/>
+    </composition>
+    <propertyOrganizer/>
+    <stickyBoard/>
+  </eClassifiers>
+</ecore:EPackage>

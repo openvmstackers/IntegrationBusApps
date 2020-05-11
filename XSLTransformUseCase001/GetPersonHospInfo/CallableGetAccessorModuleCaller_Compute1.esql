@@ -1,0 +1,128 @@
+
+
+CREATE COMPUTE MODULE CallableGetAccessorModuleCaller_Compute1
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+	
+		-- CALL CopyMessageHeaders();
+		-- CALL CopyEntireMessage();
+		
+		DECLARE refToBackendResponseRecord, refToBackendResponseColumn REFERENCE TO InputRoot;
+		DECLARE refToServiceResponse, refToServiceHospResponse REFERENCE TO OutputRoot;
+		DECLARE isMasterRecord BOOLEAN true;
+		DECLARE hasHospRecordCreated BOOLEAN false;
+		DECLARE hospArrayIndex, pageOffset INTEGER 0;
+		DECLARE capturedDate, hospDate DATE;
+		DECLARE queryString CHARACTER '';
+		
+		CREATE LASTCHILD OF OutputRoot.JSON.Data AS refToServiceResponse NAME 'person';
+		
+		
+		MOVE refToBackendResponseRecord TO InputRoot.SOAP.Body.ns:RetrieveInformationResponse.ns1:record;
+		
+		WHILE(LASTMOVE(refToBackendResponseRecord)) DO
+		
+			MOVE refToBackendResponseColumn TO refToBackendResponseRecord;
+			
+			MOVE refToBackendResponseColumn FIRSTCHILD;
+			
+			WHILE(LASTMOVE(refToBackendResponseColumn)) DO
+				IF (refToBackendResponseColumn.*:name = 'id') AND (refToBackendResponseColumn.*:value = 'MASTER') THEN
+					SET isMasterRecord = true;
+				ELSEIF (refToBackendResponseColumn.*:name = 'parentId') AND (refToBackendResponseColumn.*:value = 'MASTER') THEN
+					SET isMasterRecord = false;
+					SET hospArrayIndex = hospArrayIndex + 1;
+				ELSE
+					IF isMasterRecord THEN
+						CASE refToBackendResponseColumn.*:name
+							WHEN 'PNUMBER' THEN SET refToServiceResponse.personNumber = refToBackendResponseColumn.*:value;
+							WHEN 'PFNAME' THEN SET refToServiceResponse.name.first = refToBackendResponseColumn.*:value;
+							WHEN 'PMNAME' THEN SET refToServiceResponse.name.middle = refToBackendResponseColumn.*:value;
+							WHEN 'PLNAME' THEN SET refToServiceResponse.name.last = refToBackendResponseColumn.*:value;
+							WHEN 'PAGE' THEN SET refToServiceResponse.age = refToBackendResponseColumn.*:value;
+							WHEN 'PGENDER' THEN SET refToServiceResponse.gender = refToBackendResponseColumn.*:value;
+							WHEN 'PPOSTALADDRESSLINE1' THEN SET refToServiceResponse.postalAddress.addressLine1 = refToBackendResponseColumn.*:value;
+							WHEN 'PPOSTALADDRESSLINE2' THEN SET refToServiceResponse.postalAddress.addressLine2 = refToBackendResponseColumn.*:value;
+							WHEN 'PPOSTALADDRESSLINE3' THEN SET refToServiceResponse.postalAddress.addressLine3 = refToBackendResponseColumn.*:value;
+							WHEN 'PPOSTALADDRESSLINE4' THEN SET refToServiceResponse.postalAddress.addressLine4 = refToBackendResponseColumn.*:value;
+							WHEN 'PPOSTALCODE' THEN SET refToServiceResponse.postalAddress.code = refToBackendResponseColumn.*:value;
+							WHEN 'PPOSTALCITY' THEN SET refToServiceResponse.postalAddress.city = refToBackendResponseColumn.*:value;
+							WHEN 'PPOSTALCOUNTRYCODE' THEN SET refToServiceResponse.postalAddress.countryCode = refToBackendResponseColumn.*:value;
+							WHEN 'PEMAILADDRESS' THEN SET refToServiceResponse.email = refToBackendResponseColumn.*:value;
+							WHEN 'PMOBILEPHONE' THEN SET refToServiceResponse.mobile = refToBackendResponseColumn.*:value;
+							WHEN 'PWORKPHONE' THEN SET refToServiceResponse.workPhone = refToBackendResponseColumn.*:value;
+							WHEN 'PHOMEPHONE' THEN SET refToServiceResponse.homePhone = refToBackendResponseColumn.*:value;
+							WHEN 'PAGEOFFSET' THEN SET pageOffset = CAST(refToBackendResponseColumn.*:value AS INTEGER);
+						END CASE;
+					ELSE
+						IF NOT hasHospRecordCreated THEN
+							CREATE LASTCHILD OF refToServiceResponse AS refToServiceHospResponse NAME 'hospitalisation';
+							CREATE FIELD refToServiceHospResponse IDENTITY(JSON.Array)hospitalisation;
+							SET hasHospRecordCreated = true;
+						END IF;
+						CASE refToBackendResponseColumn.*:name
+							WHEN 'HMRN' THEN SET refToServiceResponse.hospitalisation.Item[hospArrayIndex].hmrn = refToBackendResponseColumn.*:value;
+							WHEN 'HHOSPNAME' THEN SET refToServiceResponse.hospitalisation.Item[hospArrayIndex].hospitalName = refToBackendResponseColumn.*:value;
+							WHEN 'HPOSTALADDRESSLINE1' THEN SET refToServiceResponse.hospitalisation.Item[hospArrayIndex].postalAddress.addressLine1 = refToBackendResponseColumn.*:value;
+							WHEN 'HPOSTALADDRESSLINE2' THEN SET refToServiceResponse.hospitalisation.Item[hospArrayIndex].postalAddress.addressLine2 = refToBackendResponseColumn.*:value;
+							WHEN 'HPOSTALADDRESSLINE3' THEN SET refToServiceResponse.hospitalisation.Item[hospArrayIndex].postalAddress.addressLine3 = refToBackendResponseColumn.*:value;
+							WHEN 'HPOSTALADDRESSLINE4' THEN SET refToServiceResponse.hospitalisation.Item[hospArrayIndex].postalAddress.addressLine4 = refToBackendResponseColumn.*:value;
+							WHEN 'HPOSTALCODE' THEN SET refToServiceResponse.hospitalisation.Item[hospArrayIndex].postalAddress.code = refToBackendResponseColumn.*:value;
+							WHEN 'HPOSTALCITY' THEN SET refToServiceResponse.hospitalisation.Item[hospArrayIndex].postalAddress.city = refToBackendResponseColumn.*:value;
+							WHEN 'HPOSTALCOUNTRYCODE' THEN SET refToServiceResponse.hospitalisation.Item[hospArrayIndex].postalAddress.countryCode = refToBackendResponseColumn.*:value;
+							WHEN 'HEMAILADDRESS' THEN SET refToServiceResponse.hospitalisation.Item[hospArrayIndex].email = refToBackendResponseColumn.*:value;
+							WHEN 'HCAPTUREDATE' THEN
+								SET capturedDate = CAST(refToBackendResponseColumn.*:value AS DATE FORMAT 'yyyyMMdd'); 
+								SET refToServiceResponse.hospitalisation.Item[hospArrayIndex].capturedDate = CAST(capturedDate AS CHARACTER FORMAT 'dd-MMM-yyyy');
+							WHEN 'HHOSPDATE' THEN
+								SET hospDate = CAST(refToBackendResponseColumn.*:value AS DATE FORMAT 'yyyyMMdd'); 
+								SET refToServiceResponse.hospitalisation.Item[hospArrayIndex].hospitalisationDate = CAST(hospDate AS CHARACTER FORMAT 'dd-MMM-yyyy');
+						END CASE;
+					END IF;
+				END IF;
+				
+				MOVE refToBackendResponseColumn NEXTSIBLING;
+				
+			END WHILE;	
+			
+			MOVE refToBackendResponseRecord NEXTSIBLING;
+			
+		END WHILE;
+		
+/* Doesnt Work 
+		IF(pageOffset > 0) THEN
+			SET OutputRoot.HTTPInputHeader = Environment.userdata.HTTPHeader;
+			DECLARE I INTEGER 1;
+			DECLARE J INTEGER;
+			SET J = CARDINALITY(Environment.userdata.LOCALENVIRONMENT.*[]);
+			WHILE I < J DO
+				SET OutputLocalEnvironment.*[I] = Environment.userdata.LOCALENVIRONMENT.*[I];
+				SET I = I + 1;
+			END WHILE;
+			SET OutputLocalEnvironment = Environment.userdata.LOCALENVIRONMENT;
+			SET OutputLocalEnvironment.HTTP.Input.QueryString.pageOffset = pageOffset;
+			PROPAGATE TO TERMINAL 'out1';
+		ELSE
+			PROPAGATE TO TERMINAL 'out';
+		END IF;
+		
+		RETURN FALSE;
+*/
+
+		RETURN TRUE;
+	END;
+
+	CREATE PROCEDURE CopyMessageHeaders() BEGIN
+		DECLARE I INTEGER 1;
+		DECLARE J INTEGER;
+		SET J = CARDINALITY(InputRoot.*[]);
+		WHILE I < J DO
+			SET OutputRoot.*[I] = InputRoot.*[I];
+			SET I = I + 1;
+		END WHILE;
+	END;
+
+	CREATE PROCEDURE CopyEntireMessage() BEGIN
+		SET OutputRoot = InputRoot;
+	END;
+END MODULE;

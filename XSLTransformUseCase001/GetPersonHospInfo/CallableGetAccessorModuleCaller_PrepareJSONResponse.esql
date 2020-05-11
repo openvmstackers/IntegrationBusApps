@@ -1,0 +1,77 @@
+
+
+CREATE COMPUTE MODULE CallableGetAccessorModuleCaller_PrepareJSONResponse
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		-- CALL CopyMessageHeaders();
+		-- CALL CopyEntireMessage();
+		DECLARE refToServiceResponse, refToServiceHospResponse REFERENCE TO OutputRoot;
+		DECLARE refToEnvParent REFERENCE TO Environment.userdata.PAYLOAD.parent.record;
+		DECLARE refToSortedChild REFERENCE TO InputRoot.XMLNSC.records;
+		DECLARE I, J INTEGER;
+		DECLARE capturedDate, hospDate DATE;
+		
+		CREATE LASTCHILD OF OutputRoot.JSON.Data AS refToServiceResponse NAME 'person';
+		SET refToServiceResponse.personNumber = refToEnvParent.PNUMBER;
+		SET refToServiceResponse.name.first = refToEnvParent.PFNAME;
+		SET refToServiceResponse.name.middle = refToEnvParent.PMNAME;
+		SET refToServiceResponse.name.last = refToEnvParent.PLNAME;
+		SET refToServiceResponse.age = refToEnvParent.PAGE;
+		SET refToServiceResponse.gender = refToEnvParent.PGENDER;
+		SET refToServiceResponse.postalAddress.addressLine1 = refToEnvParent.PPOSTALADDRESSLINE1;
+		SET refToServiceResponse.postalAddress.addressLine2 = refToEnvParent.PPOSTALADDRESSLINE2;
+		SET refToServiceResponse.postalAddress.addressLine3 = refToEnvParent.PPOSTALADDRESSLINE3;
+		SET refToServiceResponse.postalAddress.addressLine4 = refToEnvParent.PPOSTALADDRESSLINE4;
+		SET refToServiceResponse.postalAddress.code = refToEnvParent.PPOSTALCODE;
+		SET refToServiceResponse.postalAddress.city = refToEnvParent.PPOSTALCITY;
+		SET refToServiceResponse.postalAddress.countryCode = refToEnvParent.PPOSTALCOUNTRYCODE;
+		SET refToServiceResponse.email = refToEnvParent.PEMAILADDRESS;
+		SET refToServiceResponse.mobile = refToEnvParent.PMOBILEPHONE;
+		SET refToServiceResponse.workPhone = refToEnvParent.PWORKPHONE;
+		SET refToServiceResponse.homePhone = refToEnvParent.PHOMEPHONE;
+		
+		CREATE LASTCHILD OF refToServiceResponse AS refToServiceHospResponse NAME 'hospitalisation';
+		CREATE FIELD refToServiceHospResponse IDENTITY(JSON.Array)hospitalisation;
+		
+		SET I = 1;
+		SET J = CARDINALITY(refToSortedChild.record[]);
+		
+		WHILE I <= J DO
+			SET refToServiceHospResponse.Item[I].hmrn = refToSortedChild.record[I].HMRN;
+			SET refToServiceHospResponse.Item[I].hospitalName = refToSortedChild.record[I].HHOSPNAME;
+			SET refToServiceHospResponse.Item[I].postalAddress.addressLine1 = refToSortedChild.record[I].HPOSTALADDRESSLINE1;
+			SET refToServiceHospResponse.Item[I].postalAddress.addressLine2 = refToSortedChild.record[I].HPOSTALADDRESSLINE2;
+			SET refToServiceHospResponse.Item[I].postalAddress.addressLine3 = refToSortedChild.record[I].HPOSTALADDRESSLINE3;
+			SET refToServiceHospResponse.Item[I].postalAddress.addressLine4 = refToSortedChild.record[I].HPOSTALADDRESSLINE4;
+			SET refToServiceHospResponse.Item[I].postalAddress.code = refToSortedChild.record[I].HPOSTALCODE;
+			SET refToServiceHospResponse.Item[I].postalAddress.city = refToSortedChild.record[I].HPOSTALCITY;
+			SET refToServiceHospResponse.Item[I].postalAddress.countryCode = refToSortedChild.record[I].HPOSTALCOUNTRYCODE;
+			SET refToServiceHospResponse.Item[I].email = refToSortedChild.record[I].HEMAILADDRESS;
+			IF EXISTS(refToSortedChild.record[I].HCAPTUREDATE[]) THEN
+				SET capturedDate = CAST(refToSortedChild.record[I].HCAPTUREDATE AS DATE FORMAT 'yyyyMMdd'); 
+				SET refToServiceHospResponse.Item[I].capturedDate = CAST(capturedDate AS CHARACTER FORMAT 'dd-MMM-yyyy');
+			END IF;
+			IF EXISTS(refToSortedChild.record[I].HHOSPDATE[]) THEN
+				SET hospDate = CAST(refToSortedChild.record[I].HHOSPDATE AS DATE FORMAT 'yyyyMMdd'); 
+				SET refToServiceHospResponse.Item[I].hospitalisationDate = CAST(hospDate AS CHARACTER FORMAT 'dd-MMM-yyyy');
+			END IF;
+			SET I = I + 1;
+		END WHILE;
+				
+		RETURN TRUE;
+	END;
+
+	CREATE PROCEDURE CopyMessageHeaders() BEGIN
+		DECLARE I INTEGER 1;
+		DECLARE J INTEGER;
+		SET J = CARDINALITY(InputRoot.*[]);
+		WHILE I < J DO
+			SET OutputRoot.*[I] = InputRoot.*[I];
+			SET I = I + 1;
+		END WHILE;
+	END;
+
+	CREATE PROCEDURE CopyEntireMessage() BEGIN
+		SET OutputRoot = InputRoot;
+	END;
+END MODULE;

@@ -1,0 +1,23 @@
+
+
+Importing file: /home/chasoman/IBM/ACET11/workspace/XSLTransformUseCase001/GenericAccessorModule_Library/com/example/genericaccessormodule/GenericInterface.wsdl
+
+The WSDL import will proceed with bindings GenericInterfaceSOAP12.
+Creating wsdl schema document for file:///home/chasoman/IBM/ACET11/workspace/XSLTransformUseCase001/GenericAccessorModule_Library/com/example/genericaccessormodule/GenericInterface.wsdl.
+Parsing wsdl binding {http://genericaccessormodule.example.org/GenericInterface/}GenericInterfaceSOAP12.
+Parsing wsdl binding input RetrieveInformation.
+Parsing wsdl binding output RetrieveInformation.
+Processing doc style for operation RetrieveInformation.
+Populating WSDL schema GenericInterface.xsd.
+Creating file GenericInterface.xsd in the workspace.
+Creating file GenericInterface_InlineSchema1.xsd in the workspace.
+Creating file /GenericAccessorModule_Library/CommonDefinitions.xsd in the workspace.
+Copying source WSDL GenericInterface.wsdl to GenericInterface.wsdl.
+
+Elapsed time processing this message definition file: 0.259 seconds
+Number of warnings for this message definition file: 0
+
+
+Number of files processed: 1
+
+

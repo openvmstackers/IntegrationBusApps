@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?><xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://genericaccessormodule.example.com/Common" xmlns:Q1="http://genericaccessormodule.example.com/Common">
+
+    <xsd:element name="StatusEnumeration">
+    	<xsd:simpleType>
+    		<xsd:restriction base="xsd:string">
+    			<xsd:enumeration value="SUCCESS"/>
+    			<xsd:enumeration value="FAILURE"/>
+    			<xsd:enumeration value="PARTIAL"/>
+    		</xsd:restriction>
+    	</xsd:simpleType>
+    </xsd:element>
+
+    <xsd:complexType name="QueryStatusType">
+    	<xsd:sequence>
+    		<xsd:element maxOccurs="1" minOccurs="1" name="status" type="xsd:string">
+    		</xsd:element>
+    		<xsd:element maxOccurs="unbounded" minOccurs="0" name="errors" type="Q1:ErrorType"/>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="ErrorType">
+    	<xsd:sequence>
+    		<xsd:element maxOccurs="1" minOccurs="1" name="errorCode" type="xsd:string">
+    		</xsd:element>
+    		<xsd:element maxOccurs="1" minOccurs="1" name="errorDescription" type="xsd:string"/>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+
+    <xsd:complexType name="ColumnType">
+    	<xsd:sequence>
+    		<xsd:element maxOccurs="1" minOccurs="1" name="name" type="xsd:string">
+    		</xsd:element>
+    		<xsd:element maxOccurs="1" minOccurs="0" name="value" type="xsd:string"/>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="RecordType">
+    	<xsd:sequence>
+    		<xsd:element maxOccurs="1" minOccurs="0" name="id" type="xsd:string">
+    		</xsd:element>
+    		<xsd:element maxOccurs="1" minOccurs="0" name="parentId" type="xsd:string">
+    		</xsd:element>
+    		<xsd:element maxOccurs="unbounded" minOccurs="0" name="column" type="Q1:ColumnType"/>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="GenericAccessorModuleResponseType">
+    	<xsd:sequence>
+    		<xsd:element maxOccurs="1" minOccurs="1" name="queryStatus" type="Q1:QueryStatusType">
+    		</xsd:element>
+    		<xsd:element maxOccurs="unbounded" minOccurs="0" name="record" type="Q1:RecordType"/>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="GenericAccessorModuleRequestType">
+    	<xsd:sequence>
+    		<xsd:element maxOccurs="unbounded" minOccurs="1" name="record" type="Q1:RecordType"/>
+    	</xsd:sequence>
+    </xsd:complexType>
+</xsd:schema>

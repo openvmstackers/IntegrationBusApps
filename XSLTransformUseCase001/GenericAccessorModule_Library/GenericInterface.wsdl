@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?><wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" name="GenericInterface" targetNamespace="http://genericaccessormodule.example.org/GenericInterface/" xmlns:gif="http://genericaccessormodule.example.org/GenericInterface/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <wsdl:documentation>
+    <wsdl:appinfo source="WMQI_APPINFO">
+      <MRWSDLAppInfo imported="true">
+        <generatedXSD location="GenericInterface_InlineSchema1.xsd"/>
+        <binding hasEncoding="false" imported="true" name="GenericInterfaceSOAP12" originalBindingStyle="document"/>
+      </MRWSDLAppInfo>
+    </wsdl:appinfo>
+  </wsdl:documentation>
+  <wsdl:types>
+    
+          <xsd:schema targetNamespace="http://genericaccessormodule.example.org/GenericInterface/" xmlns:Q1="http://genericaccessormodule.example.com/Common" xmlns:ibmSchExtn="http://www.ibm.com/schema/extensions">
+<xsd:import namespace="http://genericaccessormodule.example.com/Common" schemaLocation="CommonDefinitions.xsd"/>
+<xsd:include schemaLocation="GenericInterface_InlineSchema1.xsd"/>
+    </xsd:schema>
+    </wsdl:types>
+  <wsdl:message name="RetrieveInformationRequest">
+    <wsdl:part element="gif:RetrieveInformation" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="RetrieveInformationResponse">
+    <wsdl:part element="gif:RetrieveInformationResponse" name="parameters"/>
+  </wsdl:message>
+  <wsdl:portType name="GenericInterface">
+    <wsdl:operation name="RetrieveInformation">
+      <wsdl:input message="gif:RetrieveInformationRequest"/>
+      <wsdl:output message="gif:RetrieveInformationResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="GenericInterfaceSOAP12" type="gif:GenericInterface">
+    <soap12:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="RetrieveInformation">
+      <soap12:operation soapAction="http://genericaccessormodule.example.org/GenericInterface/NewOperation"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="GenericInterface">
+    <wsdl:port binding="gif:GenericInterfaceSOAP12" name="GenericInterfaceSOAP12">
+      <soap12:address location="http://www.example.org/"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

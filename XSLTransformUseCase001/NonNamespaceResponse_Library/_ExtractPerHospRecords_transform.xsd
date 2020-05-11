@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?><xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:element name="HPOSTALADDRESSLINE4" type="xsd:string"/>
+  <xsd:element name="HPOSTALADDRESSLINE3" type="xsd:string"/>
+  <xsd:element name="HPOSTALADDRESSLINE2" type="xsd:string"/>
+  <xsd:element name="PFNAME" type="xsd:string"/>
+  <xsd:element name="HPOSTALADDRESSLINE1" type="xsd:string"/>
+  <xsd:element name="records">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element maxOccurs="unbounded" ref="record" minOccurs="0"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="PNUMBER" type="xsd:string"/>
+  <xsd:element name="PHOMEPHONE" type="xsd:string"/>
+  <xsd:element name="HEMAILADDRESS" type="xsd:string"/>
+  <xsd:element name="HCAPTUREDATE" type="xsd:string"/>
+  <xsd:element name="PLNAME" type="xsd:string"/>
+  <xsd:element name="HPOSTALCOUNTRYCODE" type="xsd:string"/>
+  <xsd:element name="PPOSTALADDRESSLINE3" type="xsd:string"/>
+  <xsd:element name="HPOSTALCITY" type="xsd:string"/>
+  <xsd:element name="PPOSTALADDRESSLINE4" type="xsd:string"/>
+  <xsd:element name="PPOSTALADDRESSLINE1" type="xsd:string"/>
+  <xsd:element name="PPOSTALCITY" type="xsd:string"/>
+  <xsd:element name="record">
+    <xsd:complexType>
+      <xsd:sequence>
+      	<xsd:choice>
+      		<xsd:element minOccurs="0" ref="parentId" />
+      		<xsd:element minOccurs="0" ref="id" />
+      	</xsd:choice>
+      	<xsd:choice>
+      		<xsd:element minOccurs="0" ref="HMRN" />
+      		<xsd:element minOccurs="0" ref="PNUMBER" />
+      	</xsd:choice>
+      	<xsd:choice>
+      		<xsd:element minOccurs="0" ref="PFNAME" />
+      		<xsd:element minOccurs="0" ref="HHOSPNAME" />
+      	</xsd:choice>
+      	<xsd:choice>
+      		<xsd:element minOccurs="0" ref="HPOSTALADDRESSLINE1" />
+      		<xsd:element minOccurs="0" ref="PMNAME" />
+      	</xsd:choice>
+      	<xsd:choice>
+      		<xsd:element minOccurs="0" ref="HPOSTALADDRESSLINE2" />
+      		<xsd:element minOccurs="0" ref="PLNAME" />
+      	</xsd:choice>
+      	<xsd:choice>
+      		<xsd:element minOccurs="0" ref="PAGE" />
+      		<xsd:element minOccurs="0" ref="HPOSTALADDRESSLINE3" />
+      	</xsd:choice>
+      	<xsd:choice>
+      		<xsd:element minOccurs="0" ref="PGENDER" />
+      		<xsd:element minOccurs="0" ref="HPOSTALADDRESSLINE4" />
+      	</xsd:choice>
+      	<xsd:choice>
+      		<xsd:element minOccurs="0" ref="HPOSTALCODE" />
+      		<xsd:element minOccurs="0" ref="PPOSTALADDRESSLINE1" />
+      	</xsd:choice>
+      	<xsd:choice>
+      		<xsd:element minOccurs="0" ref="HPOSTALCITY" />
+      		<xsd:element minOccurs="0" ref="PPOSTALADDRESSLINE2" />
+      	</xsd:choice>
+      	<xsd:choice>
+      		<xsd:element minOccurs="0" ref="PPOSTALADDRESSLINE3" />
+      		<xsd:element minOccurs="0" ref="HPOSTALCOUNTRYCODE" />
+      	</xsd:choice>
+      	<xsd:choice>
+      		<xsd:element minOccurs="0" ref="HEMAILADDRESS" />
+      		<xsd:element minOccurs="0" ref="PPOSTALADDRESSLINE4" />
+      	</xsd:choice>
+      	<xsd:choice>
+      		<xsd:element minOccurs="0" ref="PPOSTALCODE" />
+      		<xsd:element minOccurs="0" ref="HCAPTUREDATE" />
+      	</xsd:choice>
+      	<xsd:element minOccurs="0" ref="PPOSTALCITY" />
+      	<xsd:element minOccurs="0" ref="PPOSTALCOUNTRYCODE" />
+      	<xsd:element minOccurs="0" ref="PEMAILADDRESS" />
+      	<xsd:element minOccurs="0" ref="PMOBILEPHONE" />
+      	<xsd:element minOccurs="0" ref="PWORKPHONE" />
+      	<xsd:element minOccurs="0" ref="PHOMEPHONE" />
+      	<xsd:element minOccurs="0" ref="PAGEOFFSET" />
+      	<xsd:element name="SSORTDATE" type="xsd:string" minOccurs="0" maxOccurs="1"></xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="PPOSTALADDRESSLINE2" type="xsd:string"/>
+  <xsd:element name="PPOSTALCODE" type="xsd:string"/>
+  <xsd:element name="PGENDER" type="xsd:string"/>
+  <xsd:element name="PPOSTALCOUNTRYCODE" type="xsd:string"/>
+  <xsd:element name="id" type="xsd:string"/>
+  <xsd:element name="HMRN" type="xsd:string"/>
+  <xsd:element name="PAGE" type="xsd:string"/>
+  <xsd:element name="HPOSTALCODE" type="xsd:string"/>
+  <xsd:element name="PEMAILADDRESS" type="xsd:string"/>
+  <xsd:element name="PMNAME" type="xsd:string"/>
+  <xsd:element name="parentId" type="xsd:string"/>
+  <xsd:element name="PMOBILEPHONE" type="xsd:string"/>
+  <xsd:element name="PWORKPHONE" type="xsd:string"/>
+  <xsd:element name="HHOSPNAME" type="xsd:string"/>
+  <xsd:element name="PAGEOFFSET" type="xsd:string"/>
+</xsd:schema>
