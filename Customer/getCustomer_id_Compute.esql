@@ -1,0 +1,10 @@
+PATH com.sample.common.logging;
+
+CREATE COMPUTE MODULE getCustomer_id_Compute
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		CALL DebugLog(InputRoot, InputRoot, 'CUSTOMER', 'P1');
+		RETURN TRUE;
+	END;
+
+END MODULE;
